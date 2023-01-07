@@ -6,7 +6,7 @@ const Navbar = (): React.ReactElement => {
         <div className="navbar">
             <span className="logo">{config.appName}</span>
             <div className="user">
-                <img src={"currentUser.photoURL"} alt="" />
+                <img src={config.defaultPhoto} alt="" />
                 <span>{"currentUser.displayName"}</span>
                 <button onClick={() => console.log("auth")}>logout</button>
             </div>

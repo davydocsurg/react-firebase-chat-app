@@ -231,7 +231,7 @@
             }
 
             .messages {
-                background-color: #ddddf7;
+                background-color: $white;
                 padding: 10px;
                 height: calc(100% - 160px);
                 overflow: scroll;
@@ -278,7 +278,7 @@
                         .messageContent {
                             align-items: flex-end;
                             p {
-                                background-color: #8da4f1;
+                                background-color: $lightNavy;
                                 color: white;
                                 border-radius: 10px 0px 10px 10px;
                             }
@@ -320,8 +320,8 @@
                     button {
                         border: none;
                         padding: 10px 15px;
-                        color: white;
-                        background-color: #8da4f1;
+                        color: $white;
+                        background-color: $lightNavy;
                         cursor: pointer;
                     }
                 }

@@ -1,12 +1,12 @@
 import React from "react";
-import { Navbar, Search, Chats } from ".";
+import { Navbar, Search, Chat } from ".";
 
 const Sidebar = (): React.ReactElement => {
     return (
         <div className="sidebar">
             <Navbar />
             <Search />
-            <Chats />
+            <Chat />
         </div>
     );
 };
