@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import { config } from "../../config";
 
 const Register = (): React.ReactElement => {
     const [loading, setLoading] = useState(false);
@@ -10,7 +11,7 @@ const Register = (): React.ReactElement => {
         <>
             <div className="formContainer">
                 <div className="formWrapper">
-                    <span className="logo">Chatt3r</span>
+                    <span className="logo">{config.appName}</span>
                     <span className="title">Register</span>
                     <form onSubmit={() => console.log("submit")}>
                         <input required type="text" placeholder="First Name" />
