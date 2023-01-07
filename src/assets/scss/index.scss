@@ -181,11 +181,11 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                color: white;
+                color: $white;
                 cursor: pointer;
 
                 &:hover {
-                    background-color: #2f2d52;
+                    background-color: $lightNavy;
                 }
 
                 img {
@@ -273,10 +273,11 @@
                         gap: 10px;
 
                         p {
-                            background-color: $lightBlue;
+                            background-color: $white;
                             padding: 10px 20px;
                             border-radius: 0px 10px 10px 10px;
                             max-width: max-content;
+                            color: $primary;
                         }
 
                         img {
