@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# notes
+.notes
+
+# environment variables
+.env
