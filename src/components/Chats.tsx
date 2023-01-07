@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { config } from "../config";
 
 const Chats = (): React.ReactElement => {
     const [chats, setChats] = useState([
@@ -9,7 +10,7 @@ const Chats = (): React.ReactElement => {
 
             userInfo: {
                 id: 1,
-                photoURL: "https://randomuser.me",
+                photoURL: config.defaultPhoto,
                 displayName: "John Doe",
             },
         },
