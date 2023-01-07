@@ -113,7 +113,7 @@
 
         .sidebar {
             flex: 1;
-            background-color: $secondary;
+            background-color: $lightNavy;
             position: relative;
 
             .navbar {
@@ -185,7 +185,7 @@
                 cursor: pointer;
 
                 &:hover {
-                    background-color: $lightNavy;
+                    background-color: $navy;
                 }
 
                 img {
@@ -213,7 +213,7 @@
 
             .chatInfo {
                 height: 50px;
-                background-color: $secondary;
+                background-color: $lightNavy;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
