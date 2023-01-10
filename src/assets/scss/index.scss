@@ -20,6 +20,10 @@
     width: 100%;
 }
 
+.errorMessage {
+    color: $errorMsg;
+}
+
 .formContainer {
     background-color: $primary;
     height: 100vh;

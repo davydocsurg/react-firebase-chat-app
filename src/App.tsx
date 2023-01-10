@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import { firebaseConfig } from "../firebase";
 
 function App() {
-    useEffect(() => {
-        console.log(firebaseConfig);
-    }, []);
+    // useEffect(() => {
+    //     console.log(firebaseConfig);
+    // }, []);
 
     return (
         <>
