@@ -52,24 +52,23 @@ const Register = (): React.ReactElement => {
         e.preventDefault();
 
         try {
-            if (fields.file == "") {
-                setAvatarError("Please select an avatar");
-            }
+            // return console.log(e.target[3].files[0]);
 
-            const { displayName, file, email, password } = fields;
+            // if (fields.file == "") {
+            //     return setAvatarError("Please select an avatar");
+            // }
 
-            const res = await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-            console.log(res, db, "db");
+            const { displayName, email, password } = fields;
 
+            // const res =
+            await createUserWithEmailAndPassword(auth, email, password);
+            navigate("/login");
             //Create a unique image name
-            const date = new Date().getTime();
-            const storageRef = ref(storage, `${displayName + date}`);
+            // const date = new Date().getTime();
+            // const storageRef = ref(storage, `${displayName + date}`);
 
-            const upload = await uploadBytesResumable(storageRef, file.name!);
+            // const file = e.target[3].value[0];
+            // const upload = await uploadBytesResumable(storageRef, file);
             // if (upload) {
             //     getDownloadURL(storageRef).then(async (downloadURL) => {
             //         try {
@@ -141,15 +140,18 @@ const Register = (): React.ReactElement => {
                             <>{<AiOutlineUserAdd />}</>
                             <span>Add an avatar</span>
                         </label>
-                        <small className="errorMessage">
-                            {" "}
-                            {avatarError && avatarError}{" "}
-                        </small>
+                        {avatarError && (
+                            <small className="errorMessage">
+                                {avatarError}
+                            </small>
+                        )}
                         <button type="submit" disabled={loading}>
                             Sign up
                         </button>
-                        {loading &&
-                            "Uploading and compressing the image please wait..."}
+                        <small>
+                            {loading &&
+                                "Uploading and compressing the image please wait..."}
+                        </small>
                         {err && <span>Something went wrong</span>}
                     </form>
                     <p>

@@ -88,6 +88,10 @@
                     width: 32px;
                 }
             }
+
+            small {
+                color: $secondary;
+            }
         }
         p {
             color: $secondary;
