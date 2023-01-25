@@ -92,6 +92,10 @@
             small {
                 color: $secondary;
             }
+
+            span {
+                color: $errorMsg;
+            }
         }
         p {
             color: $secondary;
