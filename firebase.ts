@@ -1,8 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
+import "firebase/compat/storage";
+
+import firebase from "firebase/compat/app";
 import { getAuth } from "firebase/auth";
-import { enableIndexedDbPersistence, getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore/lite";
 import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,14 +23,17 @@ export const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+export const app = !firebase.apps.length
+    ? initializeApp(firebaseConfig)
+    : firebase.app(); //initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const storage = getStorage(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 // Enable offline persistence
-enableIndexedDbPersistence(db, { forceOwnership: false }).catch((err) => {
-    console.log(err);
-});
+// enableIndexedDbPersistence(db, { forceOwnership: false });
+// .catch((err) => {
+//     console.log(err);
+// });
 
 // export const analytics = getAnalytics(app);
