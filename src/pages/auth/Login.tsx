@@ -12,16 +12,35 @@ const Login = (): React.ReactElement => {
     });
     const navigate = useNavigate();
 
+    const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFields({
+            ...fields,
+            email: e.target.value,
+        });
+    };
+
+    const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFields({
+            ...fields,
+            password: e.target.value,
+        });
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
-            await signInWithEmailAndPassword(
+            const res: any = await signInWithEmailAndPassword(
                 auth,
                 fields.email,
                 fields.password
             );
-            navigate("/");
+            localStorage.setItem("token", res.user.accessToken!);
+            localStorage.setItem("uid", res.user?.uid!);
+
+            setTimeout(() => {
+                navigate("/");
+            }, 1000);
         } catch (err) {
             setErr(true);
         }
@@ -33,13 +52,24 @@ const Login = (): React.ReactElement => {
                 <span className="logo">{config.appName}</span>
                 <span className="title">Login</span>
                 <form onSubmit={handleSubmit}>
-                    <input type="email" placeholder="email" />
-                    <input type="password" placeholder="password" />
+                    <input
+                        type="email"
+                        placeholder="email"
+                        name="email"
+                        onChange={handleEmail}
+                    />
+                    <input
+                        type="password"
+                        placeholder="password"
+                        name="password"
+                        onChange={handlePassword}
+                    />
                     <button>Sign in</button>
                     {err && (
                         <span>
-                            Something went wrong. Check your details and try
-                            again!
+                            Something went wrong.
+                            <br />
+                            Check your details and try again!
                         </span>
                     )}
                 </form>
