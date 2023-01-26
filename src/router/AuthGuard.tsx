@@ -6,7 +6,6 @@ const AuthGuard = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();
     const isAuthenticated = checkAuthToken();
     const location = useLocation();
-    console.log(isAuthenticated);
 
     useEffect(() => {
         if (!isAuthenticated) {
