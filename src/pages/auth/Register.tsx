@@ -60,13 +60,12 @@ const Register = (): React.ReactElement => {
         e.preventDefault();
 
         try {
-            // if (fields.file == "") {
-            //     return setAvatarError("Please select an avatar");
-            // }
+            if (fields.profilePics == null) {
+                return setAvatarError("Please select an avatar");
+            }
 
             const { displayName, email, password, profilePics } = fields;
 
-            // const res =
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 email,
@@ -77,77 +76,15 @@ const Register = (): React.ReactElement => {
             if (user) {
                 await updateProfile(user, {
                     displayName: displayName,
-                    // photoURL: file,
                 });
 
                 await uploadImage(profilePics);
-                // const storage = firebase.storage();
-                // const storageRef = storage.ref();
-                // const profilePictureBlob = new Blob([profilePics], {
-                //     type: profilePics.type,
-                // });
 
-                // const profilePictureRef = storageRef.child(
-                //     `images/${user?.uid}/profilePicture.jpg`
-                // );
-                // await profilePictureRef.put(profilePictureBlob);
-                // const downloadURL = await profilePictureRef.getDownloadURL();
-                // await updateProfile(user, {
-                //     photoURL: downloadURL,
-                // });
-
-                // await setDoc(doc(db, "users", user.uid), {
-                //     uid: user.uid,
-                //     displayName,
-                //     email,
-                //     photoURL: downloadURL,
-                // });
-                // await firebase
-                //     .firestore()
-                //     .collection("users")
-                //     .doc(user.uid)
-                //     .set({
-                //         displayName: displayName,
-                //         photoURL: profilePics,
-                //     });
                 navigate("/login");
                 return user;
             } else {
                 throw new Error("User cannot be created");
             }
-            // navigate("/login");
-            //Create a unique image name
-            // const date = new Date().getTime();
-            // const storageRef = ref(storage, `${displayName + date}`);
-
-            // const upload = await uploadBytesResumable(storageRef, file);
-            // return console.log(upload, "kmms");
-            // if (upload) {
-            //     getDownloadURL(storageRef).then(async (downloadURL) => {
-            //         try {
-            //             //Update profile
-            //             await updateProfile(res.user, {
-            //                 displayName,
-            //                 photoURL: downloadURL,
-            //             });
-            //             //create user on firestore
-            // await setDoc(doc(db, "users", res.user.uid), {
-            //     uid: res.user.uid,
-            //     displayName,
-            //     email,
-            //     photoURL: downloadURL,
-            // });
-
-            //             //create empty user chats on firestore
-            //             await setDoc(doc(db, "userChats", res.user.uid), {});
-            //             navigate("/");
-            //         } catch (err) {
-            //             console.error(err);
-            //             setErr(true);
-            //             setLoading(false);
-            //         }
-            //     });
-            // }
         } catch (error: unknown) {
             console.error(error);
         }
