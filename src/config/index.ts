@@ -1,3 +1,11 @@
 import config from "./app";
 
-export { config };
+const checkAuthToken = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        return true;
+    }
+    return false;
+};
+
+export { config, checkAuthToken };
