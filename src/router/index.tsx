@@ -11,11 +11,15 @@ const isAuthenticated = checkAuthToken();
 const Router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />,
+        element: (
+            <PrivateRoute>
+                <Home />
+            </PrivateRoute>
+        ),
         errorElement: <ErrorPage />,
-        action: () => {
-            isAuthenticated ? <Home /> : <Login />;
-        },
+        // action: () => {
+        //     isAuthenticated ? <Home /> : <Login />;
+        // },
     },
 
     {
@@ -30,25 +34,5 @@ const Router = createBrowserRouter([
         errorElement: <ErrorPage />,
     },
 ]);
-
-// const Router = () => {
-//     return (
-//         <Routes>
-//             {/* <PrivateRoute path="/" element={<Home />} /> */}
-//             <Route
-//                 path="/"
-//                 element={
-//                     isAuthenticated === true ? (
-//                         <Navigate to="/" /> //|| <Component />
-//                     ) : (
-//                         <Navigate to="login" />
-//                     )
-//                 }
-//             ></Route>
-//             <Route path="/register" element={<Register />} />
-//             <Route path="/login" element={<Login />} />
-//         </Routes>
-//     );
-// };
 
 export default Router;
