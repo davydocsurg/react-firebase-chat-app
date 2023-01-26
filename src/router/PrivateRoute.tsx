@@ -2,15 +2,17 @@ import React, { useEffect } from "react";
 import { Navigate, Route, useLocation, useNavigate } from "react-router-dom";
 import { checkAuthToken } from "../config";
 
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+const AuthGuard = ({ children }: { children: JSX.Element }) => {
     const navigate = useNavigate();
     const isAuthenticated = checkAuthToken();
     const location = useLocation();
+    console.log(isAuthenticated);
 
     useEffect(() => {
-        if (isAuthenticated) {
+        if (!isAuthenticated) {
             navigate("/login");
         }
+        navigate("/");
     }, [isAuthenticated, history]);
 
     if (!isAuthenticated) {
@@ -19,4 +21,4 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     return children;
 };
 
-export default PrivateRoute;
+export default AuthGuard;
