@@ -1,8 +1,8 @@
 import { RouterProvider } from "react-router-dom";
 import Router from "./router";
 import "./assets/scss/index.scss";
-import { useEffect } from "react";
-import { firebaseConfig } from "../firebase";
+// import { useEffect } from "react";
+// import { firebaseConfig } from "../firebase";
 
 function App() {
     // useEffect(() => {
