@@ -36,10 +36,12 @@ export const AuthContext = createContext<AuthContextType>({
     // },
 });
 
+const authToken = localStorage.getItem("token");
+
 export const AuthProvider: React.FC = ({
     children,
 }: React.EmbedHTMLAttributes<any>) => {
-    const [authUser, setAuthUser] = useState<AuthContextType>({
+    const [authUserData, setAuthUserData] = useState<AuthContextType>({
         accessToken: "",
         auth: {},
         displayName: "",
@@ -57,8 +59,8 @@ export const AuthProvider: React.FC = ({
 
     useEffect(() => {
         const sub = onAuthStateChanged(auth, (user: any) => {
-            setAuthUser({
-                ...authUser,
+            setAuthUserData({
+                ...authUserData,
                 displayName: user.displayName,
                 email: user.email,
                 uid: user.uid,
@@ -68,10 +70,10 @@ export const AuthProvider: React.FC = ({
         return () => {
             sub();
         };
-    }, []);
+    }, [authToken !== null]);
 
     return (
-        <AuthContext.Provider value={{ authUser }}>
+        <AuthContext.Provider value={{ authUserData }}>
             {children}
         </AuthContext.Provider>
     );

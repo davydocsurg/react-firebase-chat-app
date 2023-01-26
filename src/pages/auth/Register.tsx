@@ -79,6 +79,8 @@ const Register = (): React.ReactElement => {
                     displayName: displayName,
                     // photoURL: file,
                 });
+
+                await uploadImage(profilePics);
                 // const storage = firebase.storage();
                 // const storageRef = storage.ref();
                 // const profilePictureBlob = new Blob([profilePics], {
@@ -149,6 +151,42 @@ const Register = (): React.ReactElement => {
         } catch (error: unknown) {
             console.error(error);
         }
+    };
+
+    const uploadImage = async (file: File) => {
+        // return console.log(file.name);
+
+        const storage = firebase.storage();
+        const storageRef = storage.ref();
+        const fileRef = storageRef.child(`files/${file.name}`);
+        const profilePictureBlob = new Blob([file], {
+            type: file.type,
+        });
+        const uploadTask = fileRef.put(file);
+        uploadTask.on(
+            firebase.storage.TaskEvent.STATE_CHANGED,
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(`Upload is ${progress}% done`);
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log("Upload is paused");
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log("Upload is running");
+                        break;
+                }
+            },
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                fileRef.getDownloadURL().then((url) => {
+                    console.log(`File available at: ${url}`);
+                });
+            }
+        );
     };
 
     return (
