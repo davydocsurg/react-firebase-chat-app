@@ -15,8 +15,8 @@ function App() {
     return (
         <>
             <AuthProvider>
+                {/* <Router /> */}
                 <RouterProvider router={Router} />
-                {/* <PrivateRoute path="/dashboard" component={Home} /> */}
             </AuthProvider>
         </>
     );
