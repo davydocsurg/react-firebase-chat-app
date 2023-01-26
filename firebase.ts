@@ -29,6 +29,7 @@ export const app = !firebase.apps.length
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+firebase.initializeApp(firebaseConfig);
 
 // Enable offline persistence
 // enableIndexedDbPersistence(db, { forceOwnership: false });

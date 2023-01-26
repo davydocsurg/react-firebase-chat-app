@@ -6,17 +6,25 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { app, auth, db, storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import firebase from "firebase/compat/app";
+
+type fieldType = {
+    displayName: string;
+    email: string;
+    password: string;
+    profilePics: File;
+};
 
 const Register = (): React.ReactElement => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(false);
     const [avatarError, setAvatarError] = useState("");
-    const [fields, setFields] = useState({
+    const [fields, setFields] = useState<fieldType>({
         displayName: "",
         email: "",
         password: "",
-        file: "",
+        profilePics: null,
     });
 
     const handleDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +51,7 @@ const Register = (): React.ReactElement => {
     const handleDisplayFile = (e: React.ChangeEvent<FileList | any>) => {
         setFields({
             ...fields,
-            file: e.target.files[0],
+            profilePics: e.target.files[0],
         });
     };
 
@@ -52,23 +60,68 @@ const Register = (): React.ReactElement => {
         e.preventDefault();
 
         try {
-            // return console.log(e.target[3].files[0]);
-
             // if (fields.file == "") {
             //     return setAvatarError("Please select an avatar");
             // }
 
-            const { displayName, email, password } = fields;
+            const { displayName, email, password, profilePics } = fields;
 
             // const res =
-            await createUserWithEmailAndPassword(auth, email, password);
-            navigate("/login");
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            const user = userCredential.user;
+            if (user) {
+                await updateProfile(user, {
+                    displayName: displayName,
+                    // photoURL: file,
+                });
+
+                await uploadImage(profilePics);
+                // const storage = firebase.storage();
+                // const storageRef = storage.ref();
+                // const profilePictureBlob = new Blob([profilePics], {
+                //     type: profilePics.type,
+                // });
+
+                // const profilePictureRef = storageRef.child(
+                //     `images/${user?.uid}/profilePicture.jpg`
+                // );
+                // await profilePictureRef.put(profilePictureBlob);
+                // const downloadURL = await profilePictureRef.getDownloadURL();
+                // await updateProfile(user, {
+                //     photoURL: downloadURL,
+                // });
+
+                // await setDoc(doc(db, "users", user.uid), {
+                //     uid: user.uid,
+                //     displayName,
+                //     email,
+                //     photoURL: downloadURL,
+                // });
+                // await firebase
+                //     .firestore()
+                //     .collection("users")
+                //     .doc(user.uid)
+                //     .set({
+                //         displayName: displayName,
+                //         photoURL: profilePics,
+                //     });
+                navigate("/login");
+                return user;
+            } else {
+                throw new Error("User cannot be created");
+            }
+            // navigate("/login");
             //Create a unique image name
             // const date = new Date().getTime();
             // const storageRef = ref(storage, `${displayName + date}`);
 
-            // const file = e.target[3].value[0];
             // const upload = await uploadBytesResumable(storageRef, file);
+            // return console.log(upload, "kmms");
             // if (upload) {
             //     getDownloadURL(storageRef).then(async (downloadURL) => {
             //         try {
@@ -78,12 +131,12 @@ const Register = (): React.ReactElement => {
             //                 photoURL: downloadURL,
             //             });
             //             //create user on firestore
-            //             await setDoc(doc(db, "users", res.user.uid), {
-            //                 uid: res.user.uid,
-            //                 displayName,
-            //                 email,
-            //                 photoURL: downloadURL,
-            //             });
+            // await setDoc(doc(db, "users", res.user.uid), {
+            //     uid: res.user.uid,
+            //     displayName,
+            //     email,
+            //     photoURL: downloadURL,
+            // });
 
             //             //create empty user chats on firestore
             //             await setDoc(doc(db, "userChats", res.user.uid), {});
@@ -98,6 +151,42 @@ const Register = (): React.ReactElement => {
         } catch (error: unknown) {
             console.error(error);
         }
+    };
+
+    const uploadImage = async (file: File) => {
+        // return console.log(file.name);
+
+        const storage = firebase.storage();
+        const storageRef = storage.ref();
+        const fileRef = storageRef.child(`files/${file.name}`);
+        const profilePictureBlob = new Blob([file], {
+            type: file.type,
+        });
+        const uploadTask = fileRef.put(file);
+        uploadTask.on(
+            firebase.storage.TaskEvent.STATE_CHANGED,
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log(`Upload is ${progress}% done`);
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log("Upload is paused");
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log("Upload is running");
+                        break;
+                }
+            },
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                fileRef.getDownloadURL().then((url) => {
+                    console.log(`File available at: ${url}`);
+                });
+            }
+        );
     };
 
     return (
