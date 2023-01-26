@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from "firebase/auth";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../../firebase";
 
 type AuthContextType = {
@@ -39,13 +39,30 @@ export const AuthContext = createContext<AuthContextType>({
 export const AuthProvider: React.FC = ({
     children,
 }: React.EmbedHTMLAttributes<any>) => {
-    const [authUser, setAuthUser] = useState<AuthContextType>();
+    const [authUser, setAuthUser] = useState<AuthContextType>({
+        accessToken: "",
+        auth: {},
+        displayName: "",
+        email: "",
+        emailVerified: false,
+        isAnonymous: false,
+        metadata: {},
+        phoneNumber: "",
+        photoURL: "",
+        providerData: [{}],
+        refreshToken: "",
+        tenantId: "",
+        uid: "",
+    });
 
     useEffect(() => {
         const sub = onAuthStateChanged(auth, (user: any) => {
-            console.log(user);
-
-            setAuthUser(user);
+            setAuthUser({
+                ...authUser,
+                displayName: user.displayName,
+                email: user.email,
+                uid: user.uid,
+            });
         });
 
         return () => {
@@ -59,3 +76,5 @@ export const AuthProvider: React.FC = ({
         </AuthContext.Provider>
     );
 };
+
+export const useAuthContext = () => useContext(AuthContext);

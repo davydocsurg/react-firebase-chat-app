@@ -73,38 +73,33 @@ const Register = (): React.ReactElement => {
                 password
             );
 
-            // return console.log(userCredential);
-
-            // const userCredential = await firebase
-            //     .auth()
-            //     .createUserWithEmailAndPassword(email, password);
             const user = userCredential.user;
             if (user) {
                 await updateProfile(user, {
                     displayName: displayName,
                     // photoURL: file,
                 });
-                const date = new Date().getTime();
-                const storageRef = ref(storage, `${displayName + date}`);
-                const profilePictureBlob = new Blob([profilePics], {
-                    type: profilePics.type,
-                });
-                const upload = await uploadBytesResumable(
-                    storageRef,
-                    profilePictureBlob
-                );
-                if (upload) {
-                    getDownloadURL(storageRef).then(async (downloadURL) => {
-                        await updateProfile(user, {
-                            photoURL: downloadURL,
-                        });
-                    });
-                }
-                // const profilePictureRef = storageRef(
+                // const storage = firebase.storage();
+                // const storageRef = storage.ref();
+                // const profilePictureBlob = new Blob([profilePics], {
+                //     type: profilePics.type,
+                // });
+
+                // const profilePictureRef = storageRef.child(
                 //     `images/${user?.uid}/profilePicture.jpg`
                 // );
                 // await profilePictureRef.put(profilePictureBlob);
                 // const downloadURL = await profilePictureRef.getDownloadURL();
+                // await updateProfile(user, {
+                //     photoURL: downloadURL,
+                // });
+
+                // await setDoc(doc(db, "users", user.uid), {
+                //     uid: user.uid,
+                //     displayName,
+                //     email,
+                //     photoURL: downloadURL,
+                // });
                 // await firebase
                 //     .firestore()
                 //     .collection("users")
@@ -113,6 +108,7 @@ const Register = (): React.ReactElement => {
                 //         displayName: displayName,
                 //         photoURL: profilePics,
                 //     });
+                navigate("/login");
                 return user;
             } else {
                 throw new Error("User cannot be created");
@@ -133,12 +129,12 @@ const Register = (): React.ReactElement => {
             //                 photoURL: downloadURL,
             //             });
             //             //create user on firestore
-            //             await setDoc(doc(db, "users", res.user.uid), {
-            //                 uid: res.user.uid,
-            //                 displayName,
-            //                 email,
-            //                 photoURL: downloadURL,
-            //             });
+            // await setDoc(doc(db, "users", res.user.uid), {
+            //     uid: res.user.uid,
+            //     displayName,
+            //     email,
+            //     photoURL: downloadURL,
+            // });
 
             //             //create empty user chats on firestore
             //             await setDoc(doc(db, "userChats", res.user.uid), {});
