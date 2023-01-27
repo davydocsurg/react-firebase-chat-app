@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useAuthContext } from "../contexts";
 
 const Search = (): React.ReactElement => {
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState("");
     const [err, setErr] = useState(false);
+    const { displayName } = useAuthContext();
 
     const handleKeyDown = () => {};
 
@@ -25,7 +27,7 @@ const Search = (): React.ReactElement => {
                 <div className="userChat" onClick={handleSelect}>
                     <img src={"user.photoURL"} alt="" />
                     <div className="userChatInfo">
-                        <span>{"user.displayName"}</span>
+                        <span>{displayName}</span>
                     </div>
                 </div>
             )}

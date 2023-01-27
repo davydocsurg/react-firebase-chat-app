@@ -38,9 +38,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 const authToken = localStorage.getItem("token");
 
-export const AuthProvider: React.FC = ({
-    children,
-}: React.EmbedHTMLAttributes<any>) => {
+export const AuthProvider = ({ children }: JSX.Element | any) => {
     const [authUserData, setAuthUserData] = useState<AuthContextType>({
         accessToken: "",
         auth: {},
@@ -73,7 +71,23 @@ export const AuthProvider: React.FC = ({
     }, [authToken !== null]);
 
     return (
-        <AuthContext.Provider value={{ authUserData }}>
+        <AuthContext.Provider
+            value={{
+                displayName: authUserData.displayName,
+                accessToken: authUserData.accessToken,
+                auth: authUserData.auth,
+                email: authUserData.email,
+                emailVerified: authUserData.emailVerified,
+                isAnonymous: authUserData.isAnonymous,
+                metadata: authUserData.metadata,
+                phoneNumber: authUserData.phoneNumber,
+                photoURL: authUserData.photoURL,
+                providerData: authUserData.providerData,
+                refreshToken: authUserData.refreshToken,
+                tenantId: authUserData.tenantId,
+                uid: authUserData.uid,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
