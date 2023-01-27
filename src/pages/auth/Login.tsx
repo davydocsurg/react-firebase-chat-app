@@ -10,6 +10,7 @@ const Login = (): React.ReactElement => {
         email: "",
         password: "",
     });
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +31,7 @@ const Login = (): React.ReactElement => {
         e.preventDefault();
 
         try {
+            setLoading(true);
             const res: any = await signInWithEmailAndPassword(
                 auth,
                 fields.email,
@@ -37,12 +39,13 @@ const Login = (): React.ReactElement => {
             );
             localStorage.setItem("token", res.user.accessToken!);
             localStorage.setItem("uid", res.user?.uid!);
-
+            setLoading(false);
             setTimeout(() => {
                 navigate("/");
             }, 1000);
         } catch (err) {
             setErr(true);
+            setLoading(false);
         }
     };
 
@@ -64,7 +67,9 @@ const Login = (): React.ReactElement => {
                         name="password"
                         onChange={handlePassword}
                     />
-                    <button>Sign in</button>
+                    <button type="submit" disabled={loading}>
+                        Sign in
+                    </button>
                     {err && (
                         <span>
                             Something went wrong.

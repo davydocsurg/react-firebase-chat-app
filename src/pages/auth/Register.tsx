@@ -1,6 +1,6 @@
 import React, { EventHandler, SyntheticEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlineUserAdd } from "react-icons/ai";
 import { config } from "../../config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { app, auth, db, storage } from "../../../firebase";
@@ -80,7 +80,10 @@ const Register = (): React.ReactElement => {
 
                 // await uploadImage(profilePics);
                 const date = new Date().getTime();
-                const storageRef = ref(storage, `${displayName + date}`);
+                const storageRef = ref(
+                    storage,
+                    `${displayName.split(" ")[0] + date}`
+                );
 
                 await uploadBytesResumable(storageRef, profilePics).then(() => {
                     getDownloadURL(storageRef).then(async (downloadURL) => {
@@ -207,7 +210,11 @@ const Register = (): React.ReactElement => {
                             </small>
                         )}
                         <button type="submit" disabled={loading}>
-                            Sign up
+                            {!loading ? (
+                                "Sign up"
+                            ) : (
+                                <AiOutlineLoading3Quarters />
+                            )}
                         </button>
                         <small>
                             {loading &&
