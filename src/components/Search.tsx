@@ -1,30 +1,27 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "../../firebase";
-import { useAuthContext } from "../contexts";
 
 const Search = (): React.ReactElement => {
     const [user, setUser] = useState<any>(null);
     const [username, setUsername] = useState("");
     const [err, setErr] = useState(false);
-    const { displayName } = useAuthContext();
+    const [queryArr, setQueryArr] = useState<any>([]);
 
     const handleSearch = async () => {
-        const term = query(
-            collection(db, "users"),
-            where("displayName", "==", username)
-        );
-
         try {
-            const querySnapshots = await getDocs(term);
-            console.log(querySnapshots);
+            const usersRef = collection(db, "users");
 
-            querySnapshots.forEach((doc) => {
+            const term = query(usersRef, where("displayName", "==", username));
+
+            const querySnapshots = await getDocs(term);
+            setQueryArr(querySnapshots);
+            queryArr.forEach((doc: any) => {
                 setUser(doc.data());
-                console.log(doc.id, " => ", doc.data());
             });
         } catch (error: any) {
             setErr(true);
+            console.error("Error searching user: ", error);
         }
     };
 
