@@ -57,12 +57,23 @@ export const AuthProvider = ({ children }: JSX.Element | any) => {
 
     useEffect(() => {
         const sub = onAuthStateChanged(auth, (user: any) => {
+            console.log("changed");
             setAuthUserData({
                 ...authUserData,
                 displayName: user.displayName,
                 email: user.email,
                 uid: user.uid,
+                photoURL: user.photoURL,
+                emailVerified: user.emailVerified,
+                phoneNumber: user.phoneNumber,
+                isAnonymous: user.isAnonymous,
+                tenantId: user.tenantId,
+                providerData: user.providerData,
+                metadata: user.metadata,
+                refreshToken: user.refreshToken,
+                accessToken: user.accessToken,
             });
+            console.log(authUserData);
         });
 
         return () => {

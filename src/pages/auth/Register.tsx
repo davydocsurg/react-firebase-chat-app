@@ -78,7 +78,42 @@ const Register = (): React.ReactElement => {
                     displayName: displayName,
                 });
 
-                await uploadImage(profilePics);
+                // await uploadImage(profilePics);
+                const date = new Date().getTime();
+                const storageRef = ref(storage, `${displayName + date}`);
+
+                await uploadBytesResumable(storageRef, profilePics).then(() => {
+                    getDownloadURL(storageRef).then(async (downloadURL) => {
+                        try {
+                            //Update profile
+                            await updateProfile(userCredential.user, {
+                                displayName,
+                                photoURL: downloadURL,
+                            });
+                            //create user on firestore
+                            await setDoc(
+                                doc(db, "users", userCredential.user.uid),
+                                {
+                                    uid: userCredential.user.uid,
+                                    displayName,
+                                    email,
+                                    photoURL: downloadURL,
+                                }
+                            );
+
+                            //create empty user chats on firestore
+                            await setDoc(
+                                doc(db, "userChats", userCredential.user.uid),
+                                {}
+                            );
+                            navigate("/");
+                        } catch (err) {
+                            console.log(err);
+                            setErr(true);
+                            setLoading(false);
+                        }
+                    });
+                });
 
                 navigate("/login");
                 return user;

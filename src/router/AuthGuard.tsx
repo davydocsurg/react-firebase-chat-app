@@ -8,10 +8,10 @@ const AuthGuard = ({ children }: { children: JSX.Element }) => {
     const location = useLocation();
 
     useEffect(() => {
-        if (!isAuthenticated) {
-            navigate("/login");
+        if (isAuthenticated) {
+            navigate("/");
         }
-        navigate("/");
+        // navigate("/");
     }, [isAuthenticated, history]);
 
     if (!isAuthenticated) {
