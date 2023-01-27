@@ -4,14 +4,12 @@ import "./assets/scss/index.scss";
 import { AuthProvider } from "./contexts";
 import AuthGuard from "./router/AuthGuard";
 import { Home } from "./pages";
+import { checkAuthToken } from "./config";
+import { useEffect } from "react";
 // import { useEffect } from "react";
 // import { firebaseConfig } from "../firebase";
 
 function App() {
-    // useEffect(() => {
-    //     console.log(firebaseConfig);
-    // }, []);
-
     return (
         <>
             <AuthProvider>

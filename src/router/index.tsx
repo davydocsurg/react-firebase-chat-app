@@ -20,9 +20,9 @@ const Router = createBrowserRouter([
     {
         path: "/register",
         element: (
-            <AuthGuard>
-                <Register />
-            </AuthGuard>
+            // <AuthGuard>
+            <Register />
+            // </AuthGuard>
         ),
         errorElement: <ErrorPage />,
     },
@@ -30,29 +30,31 @@ const Router = createBrowserRouter([
     {
         path: "/login",
         element: (
-            <AuthGuard>
-                <Login />
-            </AuthGuard>
+            // <AuthGuard>
+            <Login />
+            // </AuthGuard>
         ),
         errorElement: <ErrorPage />,
     },
 ]);
 
 // const Router = () => {
-//     <Routes>
-//         <Route path="/">
-//             <Route
-//                 index
-//                 element={
-//                     <AuthGuard>
-//                         <Home />
-//                     </AuthGuard>
-//                 }
-//             />
-//             <Route path="/login" element={<Login />} />
-//             <Route path="/register" element={<Register />} />
-//         </Route>
-//     </Routes>;
+//     return (
+//         <Routes>
+//             <Route path="/">
+//                 <Route
+//                     index
+//                     element={
+//                         <AuthGuard>
+//                             <Home />
+//                         </AuthGuard>
+//                     }
+//                 />
+//                 <Route path="/login" element={<Login />} />
+//                 <Route path="/register" element={<Register />} />
+//             </Route>
+//         </Routes>
+//     );
 // };
 
 export default Router;
