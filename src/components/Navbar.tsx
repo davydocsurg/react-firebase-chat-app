@@ -10,8 +10,8 @@ const Navbar = (): React.ReactElement => {
         <div className="navbar">
             <span className="logo">{config.appName}</span>
             <div className="user">
-                <span>{displayName?.split(" ")[0]}</span>
                 <img src={photoURL} alt="" />
+                <span>{displayName?.split(" ")[0]}</span>
                 <button onClick={() => console.log("auth")}>logout</button>
             </div>
         </div>
