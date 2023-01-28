@@ -12,7 +12,16 @@ const Search = (): React.ReactElement => {
         try {
             const usersRef = collection(db, "users");
 
-            const term = query(usersRef, where("displayName", "==", username));
+            const term = query(
+                usersRef,
+                where(
+                    "displayName",
+                    "==",
+                    username.charAt(0).toUpperCase() + username.slice(1)
+                )
+            );
+
+            console.log(username.charAt(0).toUpperCase() + username.slice(1));
 
             const querySnapshots = await getDocs(term);
             setQueryArr(querySnapshots);
