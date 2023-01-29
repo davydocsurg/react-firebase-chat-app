@@ -38,9 +38,7 @@ export const AuthContext = createContext<AuthContextType>({
 
 const authToken = localStorage.getItem("token");
 
-export const AuthProvider: React.FC = ({
-    children,
-}: React.EmbedHTMLAttributes<any>) => {
+export const AuthProvider = ({ children }: JSX.Element | any) => {
     const [authUserData, setAuthUserData] = useState<AuthContextType>({
         accessToken: "",
         auth: {},
@@ -59,12 +57,23 @@ export const AuthProvider: React.FC = ({
 
     useEffect(() => {
         const sub = onAuthStateChanged(auth, (user: any) => {
+            console.log("changed");
             setAuthUserData({
                 ...authUserData,
                 displayName: user.displayName,
                 email: user.email,
                 uid: user.uid,
+                photoURL: user.photoURL,
+                emailVerified: user.emailVerified,
+                phoneNumber: user.phoneNumber,
+                isAnonymous: user.isAnonymous,
+                tenantId: user.tenantId,
+                providerData: user.providerData,
+                metadata: user.metadata,
+                refreshToken: user.refreshToken,
+                accessToken: user.accessToken,
             });
+            console.log(authUserData);
         });
 
         return () => {
@@ -73,7 +82,23 @@ export const AuthProvider: React.FC = ({
     }, [authToken !== null]);
 
     return (
-        <AuthContext.Provider value={{ authUserData }}>
+        <AuthContext.Provider
+            value={{
+                displayName: authUserData.displayName,
+                accessToken: authUserData.accessToken,
+                auth: authUserData.auth,
+                email: authUserData.email,
+                emailVerified: authUserData.emailVerified,
+                isAnonymous: authUserData.isAnonymous,
+                metadata: authUserData.metadata,
+                phoneNumber: authUserData.phoneNumber,
+                photoURL: authUserData.photoURL,
+                providerData: authUserData.providerData,
+                refreshToken: authUserData.refreshToken,
+                tenantId: authUserData.tenantId,
+                uid: authUserData.uid,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

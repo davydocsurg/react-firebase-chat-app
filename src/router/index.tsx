@@ -1,12 +1,10 @@
-import { Component } from "react";
-import { Routes, createBrowserRouter, Route, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { checkAuthToken } from "../config";
 import { Home, Login, Register } from "../pages";
 import ErrorPage from "../pages/errors";
 import AuthGuard from "./AuthGuard";
 
-// set auth guards
-const isAuthenticated = checkAuthToken();
+const token = checkAuthToken();
 
 const Router = createBrowserRouter([
     {
@@ -22,9 +20,9 @@ const Router = createBrowserRouter([
     {
         path: "/register",
         element: (
-            <AuthGuard>
-                <Register />
-            </AuthGuard>
+            // <AuthGuard>
+            <Register />
+            // </AuthGuard>
         ),
         errorElement: <ErrorPage />,
     },
@@ -32,12 +30,31 @@ const Router = createBrowserRouter([
     {
         path: "/login",
         element: (
-            <AuthGuard>
-                <Login />
-            </AuthGuard>
+            // <AuthGuard>
+            <Login />
+            // </AuthGuard>
         ),
         errorElement: <ErrorPage />,
     },
 ]);
+
+// const Router = () => {
+//     return (
+//         <Routes>
+//             <Route path="/">
+//                 <Route
+//                     index
+//                     element={
+//                         <AuthGuard>
+//                             <Home />
+//                         </AuthGuard>
+//                     }
+//                 />
+//                 <Route path="/login" element={<Login />} />
+//                 <Route path="/register" element={<Register />} />
+//             </Route>
+//         </Routes>
+//     );
+// };
 
 export default Router;

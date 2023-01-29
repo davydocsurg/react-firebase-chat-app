@@ -3,14 +3,14 @@ import { config } from "../config";
 import { useAuthContext } from "../contexts";
 
 const Navbar = (): React.ReactElement => {
-    const authUser = useAuthContext();
-    const { displayName } = authUser?.authUserData;
+    const { displayName, photoURL } = useAuthContext();
+    console.log(photoURL);
 
     return (
         <div className="navbar">
             <span className="logo">{config.appName}</span>
             <div className="user">
-                <img src={config.defaultPhoto} alt="" />
+                <img src={photoURL} alt="" />
                 <span>{displayName?.split(" ")[0]}</span>
                 <button onClick={() => console.log("auth")}>logout</button>
             </div>

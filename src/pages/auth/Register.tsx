@@ -1,6 +1,6 @@
 import React, { EventHandler, SyntheticEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlineUserAdd } from "react-icons/ai";
 import { config } from "../../config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { app, auth, db, storage } from "../../../firebase";
@@ -61,16 +61,18 @@ const Register = (): React.ReactElement => {
 
         try {
             if (fields.profilePics == null) {
+                setLoading(false);
                 return setAvatarError("Please select an avatar");
             }
 
-            const { displayName, email, password, profilePics } = fields;
+            const { displayName, email, password } = fields;
 
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
+            console.log("res", userCredential);
 
             const user = userCredential.user;
             if (user) {
@@ -78,7 +80,7 @@ const Register = (): React.ReactElement => {
                     displayName: displayName,
                 });
 
-                await uploadImage(profilePics);
+                await uploadImage(userCredential);
 
                 navigate("/login");
                 return user;
@@ -90,40 +92,71 @@ const Register = (): React.ReactElement => {
         }
     };
 
-    const uploadImage = async (file: File) => {
-        // return console.log(file.name);
+    const uploadImage = async (userCredential: any) => {
+        const { displayName, email, profilePics } = fields;
+        const date = new Date().getTime();
+        const storageRef = ref(storage, `${displayName.split(" ")[0] + date}`);
 
-        const storage = firebase.storage();
-        const storageRef = storage.ref();
-        const fileRef = storageRef.child(`files/${file.name}`);
-        const profilePictureBlob = new Blob([file], {
-            type: file.type,
-        });
-        const uploadTask = fileRef.put(file);
-        uploadTask.on(
-            firebase.storage.TaskEvent.STATE_CHANGED,
-            (snapshot) => {
-                const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED:
-                        console.log("Upload is paused");
-                        break;
-                    case firebase.storage.TaskState.RUNNING:
-                        console.log("Upload is running");
-                        break;
+        await uploadBytesResumable(storageRef, profilePics).then(() => {
+            getDownloadURL(storageRef).then(async (downloadURL) => {
+                try {
+                    //Update profile
+                    await updateProfile(userCredential.user, {
+                        displayName,
+                        photoURL: downloadURL,
+                    });
+                    //create user on firestore
+                    await setDoc(doc(db, "users", userCredential.user.uid), {
+                        uid: userCredential.user.uid,
+                        displayName,
+                        email,
+                        photoURL: downloadURL,
+                    });
+
+                    //create empty user chats on firestore
+                    await setDoc(
+                        doc(db, "userChats", userCredential.user.uid),
+                        {}
+                    );
+                    navigate("/");
+                } catch (err) {
+                    console.log(err);
+                    setErr(true);
+                    setLoading(false);
                 }
-            },
-            (error) => {
-                console.log(error);
-            },
-            () => {
-                fileRef.getDownloadURL().then((url) => {
-                    console.log(`File available at: ${url}`);
-                });
-            }
-        );
+            });
+        });
+        // const storage = firebase.storage();
+        // const storageRef = storage.ref();
+        // const fileRef = storageRef.child(`files/${file.name}`);
+        // const profilePictureBlob = new Blob([file], {
+        //     type: file.type,
+        // });
+        // const uploadTask = fileRef.put(file);
+        // uploadTask.on(
+        //     firebase.storage.TaskEvent.STATE_CHANGED,
+        //     (snapshot) => {
+        //         const progress =
+        //             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //         console.log(`Upload is ${progress}% done`);
+        //         switch (snapshot.state) {
+        //             case firebase.storage.TaskState.PAUSED:
+        //                 console.log("Upload is paused");
+        //                 break;
+        //             case firebase.storage.TaskState.RUNNING:
+        //                 console.log("Upload is running");
+        //                 break;
+        //         }
+        //     },
+        //     (error) => {
+        //         console.log(error);
+        //     },
+        //     () => {
+        //         fileRef.getDownloadURL().then((url) => {
+        //             console.log(`File available at: ${url}`);
+        //         });
+        //     }
+        // );
     };
 
     return (
@@ -172,7 +205,11 @@ const Register = (): React.ReactElement => {
                             </small>
                         )}
                         <button type="submit" disabled={loading}>
-                            Sign up
+                            {!loading ? (
+                                "Sign up"
+                            ) : (
+                                <AiOutlineLoading3Quarters />
+                            )}
                         </button>
                         <small>
                             {loading &&
