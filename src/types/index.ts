@@ -1,4 +1,4 @@
 import type { User } from "./User";
-import type { Messages } from "./Message";
+import type { MessagesType } from "./Message";
 
-export type { User, Messages };
+export type { User, MessagesType };

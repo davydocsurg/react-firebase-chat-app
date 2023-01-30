@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Message } from ".";
 import { db } from "../../firebase";
 import { useChatContext } from "../contexts";
-import type { Messages } from "../types";
+import type { MessagesType } from "../types";
 
 const Messages = (): React.ReactElement => {
     const { user, chatId } = useChatContext();
-    const [messages, setMessages] = useState([] as Messages[]);
+    const [messages, setMessages] = useState([] as MessagesType[]);
 
     useEffect(() => {
         // return () => {

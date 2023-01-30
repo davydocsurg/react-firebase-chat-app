@@ -25,7 +25,7 @@ const Chats = (): React.ReactElement => {
     const { uid } = useAuthContext();
     const { setChat } = useChatContext();
     // const [users, setUsers] = useState<User[]>([]);
-    const [chats, setChats] = useState({} as UserChats);
+    const [chats, setChats] = useState({} as UserChats | any);
 
     useEffect(() => {
         fetchUsers();

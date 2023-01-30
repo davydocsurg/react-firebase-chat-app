@@ -20,6 +20,12 @@ const Input: React.FC = () => {
     const { uid } = useAuthContext();
     const { chatId } = useChatContext();
 
+    const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImg(e.target.files[0]);
+        }
+    };
+
     const handleSend = async () => {
         try {
             if (img) {
@@ -32,6 +38,10 @@ const Input: React.FC = () => {
                 const uploadTask = uploadBytesResumable(storageRef, imgBlob);
 
                 uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        // Handle state changes
+                    },
                     (error) => {
                         //TODO:Handle Error
                         console.error(error);
@@ -94,7 +104,7 @@ const Input: React.FC = () => {
                         type="file"
                         style={{ display: "none" }}
                         id="file"
-                        onChange={(e) => setImg(e.target?.files[0])}
+                        onChange={handleImage}
                     />
                     <label htmlFor="file">
                         <GrAttachment />

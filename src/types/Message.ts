@@ -1,4 +1,4 @@
-export type Messages = {
+export type MessagesType = {
     id: string;
     messages: Array<any>;
     date: Date;

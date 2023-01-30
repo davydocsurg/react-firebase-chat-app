@@ -12,7 +12,7 @@ type fieldType = {
     displayName: string;
     email: string;
     password: string;
-    profilePics: File;
+    profilePics: File | any;
 };
 
 const Register = (): React.ReactElement => {
