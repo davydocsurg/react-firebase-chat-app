@@ -9,7 +9,9 @@ export type MessagesType = {
 
 export type ChatType = {
     displayName: string;
-    lastMessage: Object;
+    lastMessage: {
+        text: string;
+    };
     photoURL: string;
     uid: string;
 };

@@ -12,6 +12,7 @@ import {
 import React, { useState } from "react";
 import { db } from "../../firebase";
 import { useAuthContext, useChatContext } from "../contexts";
+import { ChatType } from "../types";
 
 type User = {
     displayName: string;
@@ -21,7 +22,7 @@ type User = {
 };
 
 const Search = (): React.ReactElement => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | any>(null);
     const [username, setUsername] = useState("");
     const [err, setErr] = useState(false);
     const [queryArr, setQueryArr] = useState<any>([]);
