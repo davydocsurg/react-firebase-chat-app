@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useState } from "react";
-import type { User } from "../types";
+import type { ChatType, User } from "../types";
 import { useAuthContext } from "./AuthContext";
 
 type IntialUserChatState = {
     chatId: string;
-    user: User;
-    setChat: (userInfo: User) => void;
+    user: ChatType;
+    setChat: (userInfo: ChatType) => void;
 };
 
 export const ChatContext = createContext<IntialUserChatState>({
@@ -14,6 +14,9 @@ export const ChatContext = createContext<IntialUserChatState>({
         displayName: "",
         uid: "",
         photoURL: "",
+        lastMessage: {
+            text: "",
+        },
     },
     setChat: () => {},
 });
@@ -22,7 +25,7 @@ export const ChatProvider = ({ children }: JSX.Element | any) => {
     const [userChats, setUserChats] = useState({} as IntialUserChatState);
     const { uid } = useAuthContext();
 
-    const setChat = (userInfo: User) => {
+    const setChat = (userInfo: ChatType) => {
         let authChatUid = uid + userInfo.uid;
         let chatUid = userInfo.uid + uid;
         try {

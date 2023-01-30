@@ -6,3 +6,10 @@ export type MessagesType = {
     image?: string;
     text: string;
 };
+
+export type ChatType = {
+    displayName: string;
+    lastMessage: Object;
+    photoURL: string;
+    uid: string;
+};

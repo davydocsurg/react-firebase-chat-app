@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { config } from "../config";
 import { db } from "../../firebase";
 import { useAuthContext } from "../contexts";
-import type { User } from "../types";
+import type { ChatType, User } from "../types";
 import { useChatContext } from "../contexts";
 
 interface UserChats {
@@ -41,11 +41,10 @@ const Chats = (): React.ReactElement => {
             });
             console.log(chats);
 
-            {
-                Object.entries(chats)
-                    ?.sort((a: any, b: any) => b[1].date - a[1].date)
-                    .map((chat) => console.log(chat[1]));
-            }
+            Object.entries(chats)
+                ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                .map((chat) => console.log(chat[1]));
+
             return unsub;
         } catch (error: unknown) {
             console.error(error);
@@ -62,16 +61,16 @@ const Chats = (): React.ReactElement => {
         <div className="chats">
             {chats &&
                 Object.entries(chats)
-                    ?.sort((a: any, b: any) => b[1].date - a[1].date)
-                    .map((chat) => (
+                    // ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                    .map((chat: any) => (
                         <div
                             className="userChat"
                             key={chat[0]}
                             onClick={() => setChat(chat[1])}
                         >
-                            <img src={chat[1].photoURL} alt="" />
+                            <img src={chat[1]?.photoURL} alt="" />
                             <div className="userChatInfo">
-                                <span>{chat[1].displayName}</span>
+                                <span>{chat[1]?.displayName}</span>
                                 <p>{chat[1].lastMessage?.text}</p>
                             </div>
                         </div>
