@@ -33,14 +33,18 @@ const Chats = (): React.ReactElement => {
 
     const fetchUsers = async () => {
         try {
+            console.log(uid);
+
             const unsub = onSnapshot(doc(db, "userChats", uid), (doc) => {
                 // console.log("Current data: ", Object.entries(doc.data()));
                 setChats(doc.data());
             });
+            console.log(chats);
+
             {
                 Object.entries(chats)
                     ?.sort((a: any, b: any) => b[1].date - a[1].date)
-                    .map((chat) => console.log(chat));
+                    .map((chat) => console.log(chat[1]));
             }
             return unsub;
         } catch (error: unknown) {
@@ -50,27 +54,28 @@ const Chats = (): React.ReactElement => {
 
     console.log();
 
-    // if (!chats.lastMessage) {
-    //     return <h6>No Chats</h6>;
-    // }
+    if (!chats || Object.entries(chats).length < 1) {
+        return <h6>No Chats</h6>;
+    }
 
     return (
         <div className="chats">
-            {Object.entries(chats)
-                ?.sort((a: any, b: any) => b[1].date - a[1].date)
-                .map((chat) => (
-                    <div
-                        className="userChat"
-                        key={chat[0]}
-                        onClick={() => setChat(chat[1].userInfo)}
-                    >
-                        <img src={chat[1].userInfo?.photoURL} alt="" />
-                        <div className="userChatInfo">
-                            <span>{chat[1].userInfo?.displayName}</span>
-                            <p>{chat[1].lastMessage?.text}</p>
+            {chats &&
+                Object.entries(chats)
+                    ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                    .map((chat) => (
+                        <div
+                            className="userChat"
+                            key={chat[0]}
+                            onClick={() => setChat(chat[1])}
+                        >
+                            <img src={chat[1].photoURL} alt="" />
+                            <div className="userChatInfo">
+                                <span>{chat[1].displayName}</span>
+                                <p>{chat[1].lastMessage?.text}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
         </div>
     );
 };

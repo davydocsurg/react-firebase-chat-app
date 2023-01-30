@@ -67,7 +67,7 @@ const Input: React.FC = () => {
                 [chatId + ".lastMessage"]: {
                     text,
                 },
-                [chatId + ".date"]: serverTimestamp(),
+                // [chatId + ".date"]: serverTimestamp(),
             });
             setText("");
             setImg(null);

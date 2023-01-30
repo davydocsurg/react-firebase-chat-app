@@ -70,19 +70,21 @@ const Search = (): React.ReactElement => {
                 });
 
                 await setDoc(doc(db, "userChats", uid), {
-                    [conversationId + ".userInfo"]: {
+                    [conversationId]: {
                         uid: user?.uid,
                         displayName: user?.displayName,
                         photoURL: user?.photoURL,
+                        lastMessage: "",
                     },
                     [conversationId + ".date"]: serverTimestamp(),
                 });
 
                 await setDoc(doc(db, "userChats", user?.uid!), {
-                    [conversationId + ".userInfo"]: {
+                    [conversationId]: {
                         uid: uid,
                         displayName: displayName,
                         photoURL: photoURL,
+                        lastMessage: "",
                     },
                     [conversationId + ".date"]: serverTimestamp(),
                 });
