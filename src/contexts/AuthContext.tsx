@@ -73,7 +73,6 @@ export const AuthProvider = ({ children }: JSX.Element | any) => {
                 refreshToken: user.refreshToken,
                 accessToken: user.accessToken,
             });
-            console.log(authUserData);
         });
 
         return () => {

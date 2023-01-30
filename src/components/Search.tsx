@@ -88,6 +88,8 @@ const Search = (): React.ReactElement => {
             }
         } catch (error: unknown) {}
         // if yes, go to chat
+        setUser(null);
+        setUsername("");
     };
 
     return (

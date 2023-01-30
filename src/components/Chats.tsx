@@ -8,64 +8,46 @@ import {
 import React, { useEffect, useState } from "react";
 import { config } from "../config";
 import { db } from "../../firebase";
+import { useAuthContext } from "../contexts";
 
 interface User {
     uid: string;
-    name: string;
-    email: string;
+    photoURL: string;
+    displayName: string;
+}
+
+interface UserChats {
+    [key: string]: {
+        userInfo: User;
+        lastMessage: {
+            text: string;
+            date: number;
+        };
+        date: number;
+    };
 }
 
 const Chats = (): React.ReactElement => {
-    const [users, setUsers] = useState<User[]>([]);
-    const [chats, setChats] = useState([
-        {
-            id: 1,
-            lastMessage: { text: "Hello" },
-            date: "12:00",
-
-            userInfo: {
-                id: 1,
-                photoURL: config.defaultPhoto,
-                displayName: "John Doe",
-            },
-        },
-    ]);
+    const { uid } = useAuthContext();
+    // const [users, setUsers] = useState<User[]>([]);
+    const [chats, setChats] = useState<UserChats[]>([]);
 
     useEffect(() => {
         fetchUsers();
-        return () => {
-            fetchUsers();
-        };
-    }, []);
+        // return () => {
+        //     fetchUsers();
+        // };
+    }, [uid]);
 
     const handleSelect = (data: Object) => {};
 
     const fetchUsers = async () => {
         try {
-            // const unsubscribe = onSnapshot(doc(db, "users"), (doc) => {
-            //     console.log("Current data: ", doc.data());
-            // });
-            // FirebaseApp()
-            // .collection("users")
-            // .onSnapshot((snapshot: [any]) => {
-            //     const fetchedUsers: User[] = [];
-            //     snapshot.forEach((doc) => {
-            //         fetchedUsers.push({
-            //             id: doc.id,
-            //             ...doc.data(),
-            //         });
-            //     });
-            //     setUsers(fetchedUsers);
-            // });
-
-            const userRef = doc(db, "users");
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                console.log("Document data:", userSnap.data());
-            }
-            // userRef.forEach((doc) => {
-            //     console.log(doc.id, " => ", doc.data());
-            // });
+            const unsub = onSnapshot(doc(db, "userChats", uid), (doc) => {
+                console.log("Current data: ", doc.data());
+                setChats(doc.data());
+            });
+            return unsub;
         } catch (error: unknown) {
             console.error(error);
         }
@@ -84,7 +66,7 @@ const Chats = (): React.ReactElement => {
                         <img src={chat[1].userInfo.photoURL} alt="" />
                         <div className="userChatInfo">
                             <span>{chat[1].userInfo.displayName}</span>
-                            <p>{chat[1].lastMessage?.text}</p>
+                            {/* <p>{chat[1].lastMessage?.text}</p> */}
                         </div>
                     </div>
                 ))}

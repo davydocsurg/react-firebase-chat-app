@@ -4,7 +4,6 @@ import { useAuthContext } from "../contexts";
 
 const Navbar = (): React.ReactElement => {
     const { displayName, photoURL } = useAuthContext();
-    console.log(photoURL);
 
     return (
         <div className="navbar">
