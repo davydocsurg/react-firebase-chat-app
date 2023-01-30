@@ -31,10 +31,6 @@ const Chats = (): React.ReactElement => {
         fetchUsers();
     }, [uid]);
 
-    const handleSelect = (data: User) => {
-        setChat(data);
-    };
-
     const fetchUsers = async () => {
         try {
             const unsub = onSnapshot(doc(db, "userChats", uid), (doc) => {

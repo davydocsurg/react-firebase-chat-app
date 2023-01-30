@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "../../firebase";
-import { useAuthContext } from "../contexts";
+import { useAuthContext, useChatContext } from "../contexts";
 
 type User = {
     displayName: string;
@@ -26,6 +26,7 @@ const Search = (): React.ReactElement => {
     const [err, setErr] = useState(false);
     const [queryArr, setQueryArr] = useState<any>([]);
     const { uid, displayName, photoURL } = useAuthContext();
+    const { setChat } = useChatContext();
 
     const handleSearch = async () => {
         try {
@@ -86,6 +87,7 @@ const Search = (): React.ReactElement => {
                     [conversationId + ".date"]: serverTimestamp(),
                 });
             }
+            setChat(user!);
         } catch (error: unknown) {}
         // if yes, go to chat
         setUser(null);
