@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import firebase from "firebase/compat";
 import React, { useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 import { v4 as uuid } from "uuid";
@@ -22,14 +23,17 @@ const Input: React.FC = () => {
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
+            console.log(img);
+
             setImg(e.target.files[0]);
+            console.log(img);
         }
     };
 
     const handleSend = async () => {
         try {
             if (img) {
-                console.log(img);
+                console.log(img, "img");
 
                 const storageRef = ref(storage, uuid());
                 const imgBlob = new Blob([img], {
@@ -38,9 +42,19 @@ const Input: React.FC = () => {
                 const uploadTask = uploadBytesResumable(storageRef, imgBlob);
 
                 uploadTask.on(
+                    // firebase.storage.TaskEvent.STATE_CHANGED,
                     "state_changed",
                     (snapshot) => {
                         // Handle state changes
+                        // Observe state change events such as progress, pause, and resume
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                                console.log("Upload is paused");
+                                break;
+                            case firebase.storage.TaskState.RUNNING: // or 'running'
+                                console.log("Upload is running");
+                                break;
+                        }
                     },
                     (error) => {
                         //TODO:Handle Error
@@ -104,13 +118,17 @@ const Input: React.FC = () => {
                         type="file"
                         style={{ display: "none" }}
                         id="file"
-                        onChange={handleImage}
+                        onChange={(e) => setImg(e.target.files![0])}
+                        // value={img}
                     />
                     <label htmlFor="file">
                         <GrAttachment />
                         {/* <img src={img} alt="" /> */}
                     </label>
-                    <button disabled={text.length < 1} onClick={handleSend}>
+                    <button
+                        // disabled={text.length < 1 || img == null}
+                        onClick={handleSend}
+                    >
                         Send
                     </button>
                 </div>
