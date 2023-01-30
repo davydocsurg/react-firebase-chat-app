@@ -1,3 +1,4 @@
-import type { User, UserChats } from "./User";
+import type { User } from "./User";
+import type { Messages } from "./Message";
 
-export type { User, UserChats };
+export type { User, Messages };

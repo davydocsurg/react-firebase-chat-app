@@ -23,6 +23,8 @@ export const ChatProvider = ({ children }: JSX.Element | any) => {
     const { uid } = useAuthContext();
 
     const setChat = useCallback(async (userInfo: User) => {
+        console.log(userInfo.uid);
+
         try {
             setUserChats({
                 ...userChats,

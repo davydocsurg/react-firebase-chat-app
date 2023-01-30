@@ -12,7 +12,7 @@ const Chat: React.FC = () => {
     return (
         <div className="chat">
             <div className="chatInfo">
-                <span>{user.displayName}</span>
+                <span>{user?.displayName}</span>
                 <div className="chatIcons">
                     <AiFillCamera />
                     <BiCommentAdd />
