@@ -22,26 +22,20 @@ export const ChatProvider = ({ children }: JSX.Element | any) => {
     const [userChats, setUserChats] = useState({} as IntialUserChatState);
     const { uid } = useAuthContext();
 
-    const setChat = useCallback(async (userInfo: User) => {
-        console.log(userInfo.uid);
-
+    const setChat = (userInfo: User) => {
+        let authChatUid = uid + userInfo.uid;
+        let chatUid = userInfo.uid + uid;
         try {
             setUserChats({
                 ...userChats,
-                chatId:
-                    uid > userInfo.uid
-                        ? uid + userInfo.uid
-                        : userInfo.uid + uid,
+                chatId: uid > userInfo.uid ? authChatUid : chatUid,
                 user: userInfo,
             });
-            console.log("====================================");
-            console.log(userChats);
-            console.log("====================================");
         } catch (error: unknown) {
             console.error(error);
         }
         // return userChats;
-    }, []);
+    };
 
     return (
         <ChatContext.Provider

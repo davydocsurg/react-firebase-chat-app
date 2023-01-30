@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import moment from "moment";
 import { config } from "../config";
 import { useAuthContext, useChatContext } from "../contexts";
 
@@ -24,7 +25,7 @@ const Message: React.FC<any> = ({ message }) => {
                     src={message.senderId === uid ? photoURL : user.photoURL}
                     alt=""
                 />
-                <span>just now</span>
+                <span>{moment(message.date.seconds).format("LT")}</span>
             </div>
             <div className="messageContent">
                 <p>{message.text}</p>

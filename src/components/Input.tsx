@@ -2,6 +2,7 @@ import {
     arrayUnion,
     collection,
     doc,
+    serverTimestamp,
     setDoc,
     Timestamp,
 } from "firebase/firestore";
@@ -15,13 +16,15 @@ import { useAuthContext, useChatContext } from "../contexts";
 
 const Input: React.FC = () => {
     const [text, setText] = useState("");
-    const [img, setImg] = useState<File>();
+    const [img, setImg] = useState<File | any>(null);
     const { uid } = useAuthContext();
     const { chatId } = useChatContext();
 
     const handleSend = async () => {
         try {
             if (img) {
+                console.log(img);
+
                 const storageRef = ref(storage, uuid());
                 const imgBlob = new Blob([img], {
                     type: img.type,
@@ -49,49 +52,63 @@ const Input: React.FC = () => {
                         );
                     }
                 );
-            }
-            // const chatRef = doc(db, "chats", chatId));
-            await updateDoc(doc(db, "chats", chatId), {
-                messages: arrayUnion({
-                    id: uuid(),
-                    text: text,
-                    senderId: uid,
-                    date: Timestamp.now(),
-                }),
-            });
+            } else {
+                // const chatRef = doc(db, "chats", chatId));
+                console.log(chatId);
 
-            // await updateDoc(doc(db, "userChats", uid), {
-            //     [data.chatId + ".lastMessage"]: {
-            //       text,
-            //     },
-            //     [data.chatId + ".date"]: serverTimestamp(),
-            //   });
+                await updateDoc(doc(db, "chats", chatId), {
+                    messages: arrayUnion({
+                        id: uuid(),
+                        text: text,
+                        senderId: uid,
+                        date: Timestamp.now(),
+                    }),
+                });
+            }
+
+            await updateDoc(doc(db, "userChats", uid), {
+                [chatId + ".lastMessage"]: {
+                    text,
+                },
+                [chatId + ".date"]: serverTimestamp(),
+            });
             setText("");
+            setImg(null);
         } catch (error: any) {
             console.error(error.message);
         }
     };
 
     return (
-        <div className="input">
-            <input
-                type="text"
-                placeholder="Type something..."
-                onChange={(e) => setText(e.target.value)}
-                value={text}
-            />
-            <div className="send">
-                <GrAttachment />
+        <>
+            {/* <div className="img-cont">
+                {img !== null && <img src={img} />}
+                <hr />
+            </div> */}
+            <div className="input">
                 <input
-                    type="file"
-                    style={{ display: "none" }}
-                    id="file"
-                    onChange={(e) => setImg(e.target?.files[0])}
+                    type="text"
+                    placeholder="Type something..."
+                    onChange={(e) => setText(e.target.value)}
+                    value={text}
                 />
-                <label htmlFor="file">{/* <img src={Img} alt="" /> */}</label>
-                <button onClick={handleSend}>Send</button>
+                <div className="send">
+                    <input
+                        type="file"
+                        style={{ display: "none" }}
+                        id="file"
+                        onChange={(e) => setImg(e.target?.files[0])}
+                    />
+                    <label htmlFor="file">
+                        <GrAttachment />
+                        {/* <img src={img} alt="" /> */}
+                    </label>
+                    <button disabled={text.length < 1} onClick={handleSend}>
+                        Send
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

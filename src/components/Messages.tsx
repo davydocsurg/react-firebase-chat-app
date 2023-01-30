@@ -19,9 +19,6 @@ const Messages = (): React.ReactElement => {
     const fetchMessages = () => {
         if (chatId !== undefined) {
             const unsub = onSnapshot(doc(db, "chats", chatId), (doc) => {
-                console.log("====================================");
-                console.log(doc?.data());
-                console.log("====================================");
                 doc.exists() && setMessages(doc.data().messages);
             });
         }

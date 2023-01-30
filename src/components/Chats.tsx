@@ -43,6 +43,10 @@ const Chats = (): React.ReactElement => {
         }
     };
 
+    if (!chats) {
+        return <h6>No Chats</h6>;
+    }
+
     return (
         <div className="chats">
             {Object.entries(chats)
@@ -56,7 +60,7 @@ const Chats = (): React.ReactElement => {
                         <img src={chat[1].userInfo?.photoURL} alt="" />
                         <div className="userChatInfo">
                             <span>{chat[1].userInfo?.displayName}</span>
-                            {/* <p>{chat[1].lastMessage?.text}</p> */}
+                            <p>{chat[1].lastMessage?.text}</p>
                         </div>
                     </div>
                 ))}
