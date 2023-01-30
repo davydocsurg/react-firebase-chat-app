@@ -39,7 +39,7 @@ const Chats = (): React.ReactElement => {
             });
             {
                 Object.entries(chats)
-                    // ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                    ?.sort((a: any, b: any) => b[1].date - a[1].date)
                     .map((chat) => console.log(chat));
             }
             return unsub;

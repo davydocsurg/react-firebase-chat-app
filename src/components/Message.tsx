@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { config } from "../config";
 import { useAuthContext, useChatContext } from "../contexts";
@@ -7,6 +7,10 @@ const Message: React.FC<any> = ({ message }) => {
     const ref: any = useRef();
     const { uid, photoURL } = useAuthContext();
     const { chatId, user } = useChatContext();
+
+    useEffect(() => {
+        ref.current?.scrollIntoView({ behavior: "smooth" });
+    }, [message]);
 
     const [data, setData] = useState({
         user: {
