@@ -4,4 +4,5 @@ export type Messages = {
     date: Date;
     senderId: string;
     image?: string;
+    text: string;
 };

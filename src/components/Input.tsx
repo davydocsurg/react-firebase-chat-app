@@ -1,26 +1,63 @@
-import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
+import {
+    arrayUnion,
+    collection,
+    doc,
+    setDoc,
+    Timestamp,
+} from "firebase/firestore";
 import { updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { useState } from "react";
 import { GrAttachment } from "react-icons/gr";
 import { v4 as uuid } from "uuid";
-import { db } from "../../firebase";
-import { useAuthContext } from "../contexts";
+import { db, storage } from "../../firebase";
+import { useAuthContext, useChatContext } from "../contexts";
 
 const Input: React.FC = () => {
     const [text, setText] = useState("");
-    const [img, setImg] = useState("");
+    const [img, setImg] = useState<File>();
     const { uid } = useAuthContext();
+    const { chatId } = useChatContext();
 
     const handleSend = async () => {
         try {
-            const chatRef = doc(collection(db, "chats"));
-            await setDoc(chatRef, {
-                messages: {
+            if (img) {
+                const storageRef = ref(storage, uuid());
+                const imgBlob = new Blob([img], {
+                    type: img.type,
+                });
+                const uploadTask = uploadBytesResumable(storageRef, imgBlob);
+
+                uploadTask.on(
+                    (error) => {
+                        //TODO:Handle Error
+                        console.error(error);
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(
+                            async (downloadURL) => {
+                                await updateDoc(doc(db, "chats", chatId), {
+                                    messages: arrayUnion({
+                                        id: uuid(),
+                                        text,
+                                        senderId: uid,
+                                        date: Timestamp.now(),
+                                        img: downloadURL,
+                                    }),
+                                });
+                            }
+                        );
+                    }
+                );
+            }
+            // const chatRef = doc(db, "chats", chatId));
+            await updateDoc(doc(db, "chats", chatId), {
+                messages: arrayUnion({
                     id: uuid(),
                     text: text,
                     senderId: uid,
                     date: Timestamp.now(),
-                },
+                }),
             });
 
             // await updateDoc(doc(db, "userChats", uid), {

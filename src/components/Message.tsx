@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react";
 import { config } from "../config";
+import { useAuthContext, useChatContext } from "../contexts";
 
 const Message: React.FC<any> = ({ message }) => {
     const ref: any = useRef();
+    const { uid, photoURL } = useAuthContext();
+    const { chatId, user } = useChatContext();
 
     const [data, setData] = useState({
         user: {
@@ -10,26 +13,15 @@ const Message: React.FC<any> = ({ message }) => {
         },
         chatId: "1",
     });
-    // const {text, uid, photoURL} = message;
-    const [currentUser, setCurrentUser] = useState({
-        uid: "1",
-        photoURL: config.defaultPhoto,
-    });
 
     return (
         <div
             ref={ref}
-            className={`message ${
-                message.senderId === currentUser.uid && "owner"
-            }`}
+            className={`message ${message.senderId === uid && "owner"}`}
         >
             <div className="messageInfo">
                 <img
-                    src={
-                        message.senderId === currentUser.uid
-                            ? currentUser.photoURL
-                            : data.user.photoURL
-                    }
+                    src={message.senderId === uid ? photoURL : user.photoURL}
                     alt=""
                 />
                 <span>just now</span>
