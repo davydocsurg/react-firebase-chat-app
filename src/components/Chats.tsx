@@ -9,34 +9,24 @@ import React, { useEffect, useState } from "react";
 import { config } from "../config";
 import { db } from "../../firebase";
 import { useAuthContext } from "../contexts";
-
-interface User {
-    uid: string;
-    photoURL: string;
-    displayName: string;
-}
+import type { User } from "../types";
 
 interface UserChats {
-    [key: string]: {
-        userInfo: User;
-        lastMessage: {
-            text: string;
-            date: number;
-        };
+    userInfo: User;
+    lastMessage: {
+        text: string;
         date: number;
     };
+    date: number;
 }
 
 const Chats = (): React.ReactElement => {
     const { uid } = useAuthContext();
     // const [users, setUsers] = useState<User[]>([]);
-    const [chats, setChats] = useState<UserChats[]>([]);
+    const [chats, setChats] = useState({} as UserChats);
 
     useEffect(() => {
         fetchUsers();
-        // return () => {
-        //     fetchUsers();
-        // };
     }, [uid]);
 
     const handleSelect = (data: Object) => {};
@@ -44,7 +34,7 @@ const Chats = (): React.ReactElement => {
     const fetchUsers = async () => {
         try {
             const unsub = onSnapshot(doc(db, "userChats", uid), (doc) => {
-                console.log("Current data: ", doc.data());
+                // console.log("Current data: ", Object.entries(doc.data()));
                 setChats(doc.data());
             });
             return unsub;
@@ -63,9 +53,9 @@ const Chats = (): React.ReactElement => {
                         key={chat[0]}
                         onClick={() => handleSelect(chat[1].userInfo)}
                     >
-                        <img src={chat[1].userInfo.photoURL} alt="" />
+                        <img src={chat[1].userInfo?.photoURL} alt="" />
                         <div className="userChatInfo">
-                            <span>{chat[1].userInfo.displayName}</span>
+                            <span>{chat[1].userInfo?.displayName}</span>
                             {/* <p>{chat[1].lastMessage?.text}</p> */}
                         </div>
                     </div>
