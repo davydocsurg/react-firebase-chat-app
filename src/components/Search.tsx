@@ -69,7 +69,7 @@ const Search = (): React.ReactElement => {
                     messages: [],
                 });
 
-                await updateDoc(doc(db, "userChats", uid), {
+                await setDoc(doc(db, "userChats", uid), {
                     [conversationId + ".userInfo"]: {
                         uid: user?.uid,
                         displayName: user?.displayName,
@@ -78,7 +78,7 @@ const Search = (): React.ReactElement => {
                     [conversationId + ".date"]: serverTimestamp(),
                 });
 
-                await updateDoc(doc(db, "userChats", user?.uid!), {
+                await setDoc(doc(db, "userChats", user?.uid!), {
                     [conversationId + ".userInfo"]: {
                         uid: uid,
                         displayName: displayName,

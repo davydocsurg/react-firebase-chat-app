@@ -52,19 +52,16 @@ const Input: React.FC = () => {
                         );
                     }
                 );
-            } else {
-                // const chatRef = doc(db, "chats", chatId));
-                console.log(chatId);
-
-                await updateDoc(doc(db, "chats", chatId), {
-                    messages: arrayUnion({
-                        id: uuid(),
-                        text: text,
-                        senderId: uid,
-                        date: Timestamp.now(),
-                    }),
-                });
             }
+
+            await updateDoc(doc(db, "chats", chatId), {
+                messages: arrayUnion({
+                    id: uuid(),
+                    text: text,
+                    senderId: uid,
+                    date: Timestamp.now(),
+                }),
+            });
 
             await updateDoc(doc(db, "userChats", uid), {
                 [chatId + ".lastMessage"]: {

@@ -25,7 +25,9 @@ const Message: React.FC<any> = ({ message }) => {
                     src={message.senderId === uid ? photoURL : user.photoURL}
                     alt=""
                 />
-                <span>{moment(message.date.seconds).format("LT")}</span>
+                <span>
+                    {message.date && moment(message.date.seconds).format("LT")}
+                </span>
             </div>
             <div className="messageContent">
                 <p>{message.text}</p>

@@ -37,15 +37,22 @@ const Chats = (): React.ReactElement => {
                 // console.log("Current data: ", Object.entries(doc.data()));
                 setChats(doc.data());
             });
+            {
+                Object.entries(chats)
+                    // ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                    .map((chat) => console.log(chat));
+            }
             return unsub;
         } catch (error: unknown) {
             console.error(error);
         }
     };
 
-    if (!chats) {
-        return <h6>No Chats</h6>;
-    }
+    console.log();
+
+    // if (!chats.lastMessage) {
+    //     return <h6>No Chats</h6>;
+    // }
 
     return (
         <div className="chats">
