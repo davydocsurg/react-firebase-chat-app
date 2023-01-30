@@ -2,14 +2,6 @@ import { createContext, useCallback, useContext, useState } from "react";
 import type { User } from "../types";
 import { useAuthContext } from "./AuthContext";
 
-type ChatContextType = {
-    chat: Object;
-};
-
-type ChatProviderProps = {
-    children: JSX.Element | any;
-};
-
 type IntialUserChatState = {
     chatId: string;
     user: User;
@@ -31,12 +23,21 @@ export const ChatProvider = ({ children }: JSX.Element | any) => {
     const { uid } = useAuthContext();
 
     const setChat = useCallback(async (userInfo: User) => {
-        setUserChats({
-            ...userChats,
-            chatId:
-                uid > userInfo.uid ? uid + userInfo.uid : userInfo.uid + uid,
-            user: userInfo,
-        });
+        try {
+            setUserChats({
+                ...userChats,
+                chatId:
+                    uid > userInfo.uid
+                        ? uid + userInfo.uid
+                        : userInfo.uid + uid,
+                user: userInfo,
+            });
+            console.log("====================================");
+            console.log(userChats);
+            console.log("====================================");
+        } catch (error: unknown) {
+            console.error(error);
+        }
         // return userChats;
     }, []);
 

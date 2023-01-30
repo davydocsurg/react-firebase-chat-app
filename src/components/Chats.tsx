@@ -10,6 +10,7 @@ import { config } from "../config";
 import { db } from "../../firebase";
 import { useAuthContext } from "../contexts";
 import type { User } from "../types";
+import { useChatContext } from "../contexts";
 
 interface UserChats {
     userInfo: User;
@@ -22,6 +23,7 @@ interface UserChats {
 
 const Chats = (): React.ReactElement => {
     const { uid } = useAuthContext();
+    const { setChat } = useChatContext();
     // const [users, setUsers] = useState<User[]>([]);
     const [chats, setChats] = useState({} as UserChats);
 
@@ -29,7 +31,9 @@ const Chats = (): React.ReactElement => {
         fetchUsers();
     }, [uid]);
 
-    const handleSelect = (data: Object) => {};
+    const handleSelect = (data: User) => {
+        setChat(data);
+    };
 
     const fetchUsers = async () => {
         try {
@@ -51,7 +55,7 @@ const Chats = (): React.ReactElement => {
                     <div
                         className="userChat"
                         key={chat[0]}
-                        onClick={() => handleSelect(chat[1].userInfo)}
+                        onClick={() => setChat(chat[1].userInfo)}
                     >
                         <img src={chat[1].userInfo?.photoURL} alt="" />
                         <div className="userChatInfo">

@@ -1,7 +1,7 @@
 import { RouterProvider } from "react-router-dom";
 import Router from "./router";
 import "./assets/scss/index.scss";
-import { AuthProvider } from "./contexts";
+import { AuthProvider, ChatProvider } from "./contexts";
 import AuthGuard from "./router/AuthGuard";
 import { Home } from "./pages";
 import { checkAuthToken } from "./config";
@@ -13,8 +13,10 @@ function App() {
     return (
         <>
             <AuthProvider>
-                {/* <Router /> */}
-                <RouterProvider router={Router} />
+                <ChatProvider>
+                    {/* <Router /> */}
+                    <RouterProvider router={Router} />
+                </ChatProvider>
             </AuthProvider>
         </>
     );
