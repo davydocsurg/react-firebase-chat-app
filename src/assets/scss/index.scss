@@ -255,6 +255,14 @@
                 height: calc(100% - 160px);
                 overflow: scroll;
 
+                .empty-msg {
+                    color: $primary;
+                    text-align: center;
+                    display: flex;
+                    margin-left: 30%;
+                    margin-top: 70%;
+                }
+
                 .message {
                     display: flex;
                     gap: 20px;
@@ -310,6 +318,10 @@
                         }
                     }
                 }
+            }
+            .img-cont {
+                background: $white;
+                height: auto;
             }
 
             .input {

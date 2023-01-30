@@ -8,86 +8,74 @@ import {
 import React, { useEffect, useState } from "react";
 import { config } from "../config";
 import { db } from "../../firebase";
+import { useAuthContext } from "../contexts";
+import type { User } from "../types";
+import { useChatContext } from "../contexts";
 
-interface User {
-    uid: string;
-    name: string;
-    email: string;
+interface UserChats {
+    userInfo: User;
+    lastMessage: {
+        text: string;
+        date: number;
+    };
+    date: number;
 }
 
 const Chats = (): React.ReactElement => {
-    const [users, setUsers] = useState<User[]>([]);
-    const [chats, setChats] = useState([
-        {
-            id: 1,
-            lastMessage: { text: "Hello" },
-            date: "12:00",
-
-            userInfo: {
-                id: 1,
-                photoURL: config.defaultPhoto,
-                displayName: "John Doe",
-            },
-        },
-    ]);
+    const { uid } = useAuthContext();
+    const { setChat } = useChatContext();
+    // const [users, setUsers] = useState<User[]>([]);
+    const [chats, setChats] = useState({} as UserChats);
 
     useEffect(() => {
         fetchUsers();
-        return () => {
-            fetchUsers();
-        };
-    }, []);
-
-    const handleSelect = (data: Object) => {};
+    }, [uid]);
 
     const fetchUsers = async () => {
         try {
-            // const unsubscribe = onSnapshot(doc(db, "users"), (doc) => {
-            //     console.log("Current data: ", doc.data());
-            // });
-            // FirebaseApp()
-            // .collection("users")
-            // .onSnapshot((snapshot: [any]) => {
-            //     const fetchedUsers: User[] = [];
-            //     snapshot.forEach((doc) => {
-            //         fetchedUsers.push({
-            //             id: doc.id,
-            //             ...doc.data(),
-            //         });
-            //     });
-            //     setUsers(fetchedUsers);
-            // });
+            console.log(uid);
 
-            const userRef = doc(db, "users");
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                console.log("Document data:", userSnap.data());
+            const unsub = onSnapshot(doc(db, "userChats", uid), (doc) => {
+                // console.log("Current data: ", Object.entries(doc.data()));
+                setChats(doc.data());
+            });
+            console.log(chats);
+
+            {
+                Object.entries(chats)
+                    ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                    .map((chat) => console.log(chat[1]));
             }
-            // userRef.forEach((doc) => {
-            //     console.log(doc.id, " => ", doc.data());
-            // });
+            return unsub;
         } catch (error: unknown) {
             console.error(error);
         }
     };
 
+    console.log();
+
+    if (!chats || Object.entries(chats).length < 1) {
+        return <h6>No Chats</h6>;
+    }
+
     return (
         <div className="chats">
-            {Object.entries(chats)
-                ?.sort((a: any, b: any) => b[1].date - a[1].date)
-                .map((chat) => (
-                    <div
-                        className="userChat"
-                        key={chat[0]}
-                        onClick={() => handleSelect(chat[1].userInfo)}
-                    >
-                        <img src={chat[1].userInfo.photoURL} alt="" />
-                        <div className="userChatInfo">
-                            <span>{chat[1].userInfo.displayName}</span>
-                            <p>{chat[1].lastMessage?.text}</p>
+            {chats &&
+                Object.entries(chats)
+                    ?.sort((a: any, b: any) => b[1].date - a[1].date)
+                    .map((chat) => (
+                        <div
+                            className="userChat"
+                            key={chat[0]}
+                            onClick={() => setChat(chat[1])}
+                        >
+                            <img src={chat[1].photoURL} alt="" />
+                            <div className="userChatInfo">
+                                <span>{chat[1].displayName}</span>
+                                <p>{chat[1].lastMessage?.text}</p>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
         </div>
     );
 };
