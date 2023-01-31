@@ -51,9 +51,7 @@ const Chats = (): React.ReactElement => {
         }
     };
 
-    console.log();
-
-    if (!chats || Object.entries(chats).length < 1) {
+    if (!chats || Object.entries(chats).length < 3) {
         return <h6>No Chats</h6>;
     }
 

@@ -37,6 +37,7 @@ const Login = (): React.ReactElement => {
                 fields.email,
                 fields.password
             );
+
             localStorage.setItem("token", res.user.accessToken!);
             localStorage.setItem("uid", res.user?.uid!);
             setLoading(false);
