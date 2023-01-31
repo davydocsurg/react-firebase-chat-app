@@ -125,10 +125,7 @@ const Input: React.FC = () => {
                         <GrAttachment />
                         {/* <img src={img} alt="" /> */}
                     </label>
-                    <button
-                        // disabled={text.length < 1 || img == null}
-                        onClick={handleSend}
-                    >
+                    <button disabled={text.length < 1} onClick={handleSend}>
                         Send
                     </button>
                 </div>
